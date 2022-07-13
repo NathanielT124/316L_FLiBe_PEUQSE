@@ -4,16 +4,14 @@ Created on Tue Jul 12 12:41:40 2022
 
 @author: NWT
 
-This data file contains the data for chromium concentration with relation to 
-depth in a sample of 316L stainless steel that was exposed to FLiBe salt in a 
+This data file contains the data for chromium concentration with relation to
+depth in a sample of 316L stainless steel that was exposed to FLiBe salt in a
 static testing apparatus for 3000 hours at 700 C.
 
 Distances are in micrometers and concentrations are in weight percent.
 
 Associated error with uncertainty is also provided.
 """
-
-import sympy as sy
 
 # Distances in the sample, starting from salt-side surface (0 μ), (Units: μ)
 distances = [0,
@@ -442,33 +440,24 @@ errors = [0.666174,
 time = 3000
 
 if __name__ == "__main__":
-    print("data_316.py running independently")
-    import matplotlib.plt as plt
+    print("data_316.py: Running independently.")
+    import matplotlib.pyplot as plt
     import math
     
     calc_conc = []
 
-
-    plt.figure(0)
-    plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
-    plt.title("3000 hr 316L FLiBe exposure chromium depletion")
-    plt.ylabel("Concentration (%)")
-    plt.xlabel("Distance (um)")
-
-
-    # Distance
-    
-    x = sy.Symbol('x')
-
-    DeffCr = 8.10004483e-19
-    C0Cr =  1.72341756e+01
-    horiz_offset = -1.60876594e+00
-    lin_comp = 0.01
-
+    # Informed posteriors from PEUQSE simulation
+    DeffCr = 2.35300517e-20
+    C0Cr =  1.74163883e+01
+    horiz_offset = -8.67449704e-01
+    lin_comp = 6.46705364e-01
 
     for x in distances:
         calc_conc.append(C0Cr*math.erf(((x-horiz_offset)*10**-6)/(2*math.sqrt(DeffCr)*time)) + lin_comp*(x-horiz_offset))
       
-
-    # plt.figure(1)
+    plt.figure(0)
+    plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
+    plt.title("3000 hr 316L FLiBe exposure chromium depletion")
+    plt.ylabel("Concentration (%)")
+    plt.xlabel("Distance (μm)")
     plt.plot(distances, calc_conc, color = 'k')    

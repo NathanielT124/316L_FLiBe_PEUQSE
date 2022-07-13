@@ -25,22 +25,22 @@ if __name__ == "__main__":
     # Labels for x and y axis, as well as parameter names provided.
     UserInput.simulated_response_plot_settings['x_label'] = 'distance (um)'
     UserInput.simulated_response_plot_settings['y_label'] = r'$Concentration (wt\%)$'
-    UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'horiz_offset'}
+    UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'horiz_offset','d':'lin_comp'}
     
     # Provided the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5]
-    UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3, 1]
+    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5, 0.0]
+    UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3.0, 1.0, -1]
     
     # Optional bound setting lines for finding uninformed parameters.
-    # UserInput.model['InputParameterPriorValues_upperBounds'] = [None, None, None, 3] 
-    # UserInput.model['InputParameterPriorValues_lowerBounds'] = [None, None, None, -3]
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [None, None, None, 3] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [None, None, None, -3]
     
     # Guesses are provided, since the posteriors deviate significntly from literature values.
-    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, -1.5] 
+    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, -1.5, 0] 
 
     # Provides simulation function for Cr concentration throughout a sample
     UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper
-    # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if deccesary
+    # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if neccesary
 
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
     UserInput.parameter_estimation_settings['mcmc_length'] = 1000 # 10000 is the default.
