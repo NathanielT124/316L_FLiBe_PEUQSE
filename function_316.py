@@ -35,6 +35,12 @@ def simulation_function_wrapper(parametersArray):#this has a and b in it.
     b_given = parametersArray[1] #b "given" just means this wrapper will simulate using whatever b value it receives.
     c_given = parametersArray[2]
     # d_given = parametersArray[3]
-    y = simulationFunction(x_values_for_data, a_given, b_given, c_given) #, d_given)  #an alternatie simpler syntax to unpack the parameters would be: simulationFunction(x_values_for_data, *parametersArray) 
-    return y
+    try:
+        y = simulationFunction(x_values_for_data, a_given, b_given, c_given) #, d_given)  #an alternatie simpler syntax to unpack the parameters would be: simulationFunction(x_values_for_data, *parametersArray) 
+        return y
+    except:
+        print("Function failure detected")
+        return None
+    
+    
     

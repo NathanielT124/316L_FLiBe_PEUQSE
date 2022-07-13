@@ -20,7 +20,7 @@ if __name__ == "__main__":
     #Optional: provide labels for the responses axes and parameter names.
     UserInput.simulated_response_plot_settings['x_label'] = 'distance (um)'
     UserInput.simulated_response_plot_settings['y_label'] = r'$Concentration (wt\%)$'
-    UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'a','b':'b'}
+    UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'a','b':'b','c':'c'}
     
     #Provide the prior distribution and uncertainties of the individual parameters.
     UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5] # , 0.5] #prior expected values for a and b
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     # UserInput.model['walkerInitialDistributionSpread. It'] = 0.25
 
     #mcmc length should typically be on the order of 10,000 per parameter. By default, the burn in will be the first 10% of the mcmc length.
-    UserInput.parameter_estimation_settings['mcmc_length'] = 1000 #10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 500 #10000 is the default.
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     #After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
     PE_object = PEUQSE.parameter_estimation(UserInput)
