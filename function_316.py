@@ -3,35 +3,63 @@
 Created on Tue Jul 12 13:27:52 2022
 
 @author: NWT
+
+This file contains the simulated function for modeling the concentration of Cr
+in a sample relative to depth. A wrapper function which takes all parameters as
+a single nested array is also implemented, as PEUQSE requires to run properly
 """
 
 import numpy as np
-import math
 import scipy
+import sys
+import data_316
 
-
-#To use PEUQSE, you can have a function, but you also need to make a function wrapper that takes *only* the parameters as a single vector.
-def simulationFunction(x,a,b): #here x is a scalar or an array and "a" and "b" are constants for the equation.
-    C0Cr = b # 16.825
-    t = 3000
-    x =np.array(x)
+# This simulation function takes a single independant variable, depth (x) and returns the concentration predicted
+# at any particular depth given time. a, b, and c are the effective diffusion coefficient, initial chromium concentration,
+# and the horizontal offset for the function, respectively.
+def simulationFunction(x,a,b,c):
+    C0Cr = b # 16.825 is the literature value
+    horiz_offset = c # horizontal offset
+    t = data_316.time # 3000 hr for this dataset
+    x = np.array(x) # distances must be a numpy array to run through PEUQSE properly
     y =  C0Cr*scipy.special.erf(
-        (x*10**-6)/(2*(a**(1/2))*t)
-        ) #This is the same as d = (t-a)**2 + b
-    #print("line 9", y)
+        ((x-horiz_offset)*10**-6)/(2*(a**(1/2))*t)
+        )
     return y
 
 
 
-#Now we will make a wrapper for the simulation function, since PEUQSE needs that.
-x_values_for_data = []  #This is just initializing the global value to avoid confusion (see below)
-#Now to populate the global variable.
-import data_316 #I am using an import to show we can use the x_values associated with the observed data. Our wrapper should take only parameters and not x values.
+# PEUQSE required wrapper function which takes all parameters as a single nested array.
+x_values_for_data = []  # This is just initializing the global value to avoid confusion
 x_values_for_data = data_316.distances
-def simulation_function_wrapper(parametersArray):#this has a and b in it.
-    global x_values_for_data  #It is a good idea to create a global variable to pass in the x_values for your simulation.
-    a_given = parametersArray[0] #a "given" just means this wrapper will simulate using whatever a value it receives.
-    b_given = parametersArray[1] #b "given" just means this wrapper will simulate using whatever b value it receives.
-    y = simulationFunction(x_values_for_data, a_given, b_given)  #an alternatie simpler syntax to unpack the parameters would be: simulationFunction(x_values_for_data, *parametersArray) 
-    return y
+
+def simulation_function_wrapper(parametersArray): 
+    global x_values_for_data
+    a_given = parametersArray[0] # a "given" just means this wrapper will simulate using whatever a value it receives.
+    b_given = parametersArray[1] # b "given" just means this wrapper will simulate using whatever b value it receives.
+    c_given = parametersArray[2]
+    
+    # Call the simulation function with all the parameters passed in, y is returned as a numpy array
+    y = simulationFunction(x_values_for_data, a_given, b_given, c_given) 
+    
+    # This is a check to determine if y contains any NaN values (NOTE: THIS CODE MAY SOON BE IMPLEMENTED IN PEUQSE AND BE REDUNDANT)
+    y_array = np.array(y)
+    nans_in_array = np.isnan(y_array)
+    
+    # If block checks for any NaN values in the result from the simulation function. If so, the wrapper returns a None object and the result is 
+    # treated as a 0-probability point
+    if True in nans_in_array:
+        print("NaN detected in result array for simulation function.")
+        sys.stdout.flush()
+        return None
+    else:
+        # Only reached if the results contain no NaN values, hence a valid entry
+        return y
+
+
+if __name__ == "__main__":
+    print("function_316.py running independently")
+    print(simulation_function_wrapper([[1E-19],[17],[1.5]]))
+    
+    
     
