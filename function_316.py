@@ -10,7 +10,7 @@ import scipy
 
 
 #To use PEUQSE, you can have a function, but you also need to make a function wrapper that takes *only* the parameters as a single vector.
-def simulationFunction(x,a,b,c): #here x is a scalar or an array and "a" and "b" are constants for the equation.
+def simulationFunction(x,a,b,c):#,d): #here x is a scalar or an array and "a" and "b" are constants for the equation.
     C0Cr = b # 16.825
     horiz_offset = c
     # linear_comp = d
@@ -18,7 +18,7 @@ def simulationFunction(x,a,b,c): #here x is a scalar or an array and "a" and "b"
     x =np.array(x)
     y =  C0Cr*scipy.special.erf(
         ((x-horiz_offset)*10**-6)/(2*(a**(1/2))*t)
-        ) #+ linear_comp*(x-horiz_offset)#This is the same as d = (t-a)**2 + b
+        )# + linear_comp*(x-horiz_offset) # This is the same as d = (t-a)**2 + b
     #print("line 9", y)
     return y
 
@@ -34,7 +34,7 @@ def simulation_function_wrapper(parametersArray):#this has a and b in it.
     a_given = parametersArray[0] #a "given" just means this wrapper will simulate using whatever a value it receives.
     b_given = parametersArray[1] #b "given" just means this wrapper will simulate using whatever b value it receives.
     c_given = parametersArray[2]
-    #d_given = parametersArray[3]
-    y = simulationFunction(x_values_for_data, a_given, b_given, c_given)  #an alternatie simpler syntax to unpack the parameters would be: simulationFunction(x_values_for_data, *parametersArray) 
+    # d_given = parametersArray[3]
+    y = simulationFunction(x_values_for_data, a_given, b_given, c_given) #, d_given)  #an alternatie simpler syntax to unpack the parameters would be: simulationFunction(x_values_for_data, *parametersArray) 
     return y
     

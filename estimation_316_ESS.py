@@ -23,18 +23,18 @@ if __name__ == "__main__":
     UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'a','b':'b'}
     
     #Provide the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -3] #prior expected values for a and b
-    UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3, 1] #required. #If user wants to use a prior with covariance, then this must be a 2D array/ list. To assume no covariance, a 1D
-    UserInput.model['InputParameterPriorValues_upperBounds'] = [8E-19, 25, 0] 
-    UserInput.model['InputParameterPriorValues_lowerBounds'] = [1e-19, 10, -6]
-    UserInput.model['InputParameterInitialGuess'] = [3E-19, 18, -3] #Can optionally change the initial guess to be different from prior means.
+    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5] # , 0.5] #prior expected values for a and b
+    UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3, 1] #, 2] #required. #If user wants to use a prior with covariance, then this must be a 2D array/ list. To assume no covariance, a 1D
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [1E-18, 25, 0] #, 5] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [1E-19, 10, -6] # , 0]
+    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, -1.60887] # , .5] #Can optionally change the initial guess to be different from prior means.
 
     #Provide a function that returns simulated values -- must of the same form as observed values, should be arrays or lists with nesting like [[1,2,3]] or [[1,2,3,4],[4,5,6,6]]
     UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper #This must simulate with *only* the parameters listed above, and no other arguments.
-    UserInput.model['walkerInitialDistributionSpread. It'] = 0.25
+    # UserInput.model['walkerInitialDistributionSpread. It'] = 0.25
 
     #mcmc length should typically be on the order of 10,000 per parameter. By default, the burn in will be the first 10% of the mcmc length.
-    UserInput.parameter_estimation_settings['mcmc_length'] = 500 #10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 1000 #10000 is the default.
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     #After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
     PE_object = PEUQSE.parameter_estimation(UserInput)

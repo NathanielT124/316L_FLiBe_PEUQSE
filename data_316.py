@@ -430,6 +430,7 @@ errors = [0.666174,
 ]
 
 calc_conc = []
+
 """
 plt.figure(0)
 plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
@@ -442,17 +443,16 @@ plt.xlabel("Distance (um)")
 x = sy.Symbol('x')
 t = 3000
 
-DeffCr = 4.2 * 10**-19
-C0Cr = 16.825
+DeffCr = 8.10004483e-19
+C0Cr =  1.72341756e+01
+horiz_offset = -1.60876594e+00
+lin_comp = 0.01
 
-
-
-for x in distances:
-    calc_conc.append(C0Cr*math.erf((x*10**-6)/(2*math.sqrt(DeffCr)*t)))
-    
-    
 """
-print(calc_conc)
-plt.figure(1)
+for x in distances:
+    calc_conc.append(C0Cr*math.erf(((x-horiz_offset)*10**-6)/(2*math.sqrt(DeffCr)*t)) + lin_comp*(x-horiz_offset))
+  
+
+# plt.figure(1)
 plt.plot(distances, calc_conc, color = 'k')    
 """
