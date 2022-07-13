@@ -27,7 +27,7 @@ def simulationFunction(x,a,b,c,d):
     if eff_d_cr < 0.0:
         return [float("nan")]
     y =  C0Cr*scipy.special.erf(
-        ((x-horiz_offset)*10**-6)/(2*(np.sqrt(eff_d_cr)*t)) + vert_comp*(x - horiz_offset)
+        (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr ) * t ) ) + vert_comp * ( x - horiz_offset )
         )
     return y
 
@@ -61,4 +61,4 @@ def simulation_function_wrapper(parametersArray):
 
 if __name__ == "__main__":
     print("function_316.py: Running independently.")
-    print(simulation_function_wrapper([1E-19,17,1.5,0]))
+    print(simulation_function_wrapper([3E-19, 17.2125, .5, 0]))

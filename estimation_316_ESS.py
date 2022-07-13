@@ -28,15 +28,15 @@ if __name__ == "__main__":
     UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'horiz_offset','d':'lin_comp'}
     
     # Provided the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5, 0.0]
+    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5, 0.0] # [4.2E-19, 16.825, -1.5, 0.0]
     UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3.0, 1.0, -1]
     
     # Optional bound setting lines for finding uninformed parameters.
-    UserInput.model['InputParameterPriorValues_upperBounds'] = [None, None, None, 3] 
-    UserInput.model['InputParameterPriorValues_lowerBounds'] = [None, None, None, -3]
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [1E-16, 30, None, 3] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0, 0, None, -3]
     
     # Guesses are provided, since the posteriors deviate significntly from literature values.
-    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, -1.5, 0] 
+    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, 0, 0] 
 
     # Provides simulation function for Cr concentration throughout a sample
     UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper
@@ -56,8 +56,8 @@ if __name__ == "__main__":
     # Create histograms and reponses only. PE_object.makeSamplingScatterMatrixPlot() does not seem to work
     PE_object.createSimulatedResponsesPlots()
     PE_object.makeHistogramsForEachParameter()
-
     
+    PE_object.createAllPlots()
 """ 
     #########Optional example of saving and loading PE_objects after running the mcmc.
     #########This feature requires having dill installed (pip install dill, https://pypi.org/project/dill/)
