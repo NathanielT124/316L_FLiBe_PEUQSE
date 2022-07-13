@@ -1,0 +1,7 @@
+*.xlsx
+CITATIONS/
+*.dill
+__pycache__/
+graphs/
+pickles/
+logs_and_csvs/
