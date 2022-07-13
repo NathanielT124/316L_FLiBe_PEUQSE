@@ -447,13 +447,13 @@ if __name__ == "__main__":
     calc_conc = []
 
     # Informed posteriors from PEUQSE simulation
-    DeffCr = 2.35300517e-20
-    C0Cr =  1.74163883e+01
-    horiz_offset = -8.67449704e-01
-    lin_comp = 6.46705364e-01
+    DeffCr = 7.23158311e-19
+    C0Cr =  1.71877113e+01
+    horiz_offset =  -1.51819174e+00
+    # lin_comp = 6.46705364e-01
 
     for x in distances:
-        calc_conc.append(C0Cr*math.erf(((x-horiz_offset)*10**-6)/(2*math.sqrt(DeffCr)*time)) + lin_comp*(x-horiz_offset))
+        calc_conc.append(C0Cr*math.erf(((x-horiz_offset)*10**-6)/(2*math.sqrt(DeffCr)*time))) # + lin_comp*(x-horiz_offset))
       
     plt.figure(0)
     plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
@@ -461,3 +461,13 @@ if __name__ == "__main__":
     plt.ylabel("Concentration (%)")
     plt.xlabel("Distance (μm)")
     plt.plot(distances, calc_conc, color = 'k')    
+    
+    
+    DeffCr = 4.2e-19
+    C0Cr =  1.6825e+01
+    horiz_offset =  0
+    calc_orig = []
+    for x in distances:
+        calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr)*time)))
+        
+    plt.plot(distances, calc_orig, color = 'b')
