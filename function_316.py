@@ -54,7 +54,13 @@ def simulation_function_wrapper(parametersArray):
         # Only reached if the results contain no NaN values, hence a valid entry
         return y
 
+# This wrapper takes a logarithm parameter a, and calls the simulation function with a converted to its anti-log, then returns the result
+def simulation_function_using_log_a_wrapper(parametersWithAntiLogAArray):
+    parametersArray = [10**parametersWithAntiLogAArray[0], parametersWithAntiLogAArray[1], parametersWithAntiLogAArray[2]]
+    y = simulation_function_wrapper(parametersArray)
+    return y                         
+                                 
 
 if __name__ == "__main__":
     print("function_316.py: Running independently.")
-    print(simulation_function_wrapper([ 4.2000e-19,  1.6825e+01, 5]))
+    print(simulation_function_using_log_a_wrapper([ np.log10(4.2000e-19),  1.6825e+01, 5]))

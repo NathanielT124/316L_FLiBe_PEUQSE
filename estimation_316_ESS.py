@@ -16,6 +16,7 @@ import PEUQSE.UserInput as UserInput
 if __name__ == "__main__":
     import function_316
     import data_316 
+    import numpy as np
         
     # Provided distances and Cr concetrations in the samples.
     UserInput.responses['responses_abscissa'] = data_316.distances
@@ -28,19 +29,19 @@ if __name__ == "__main__":
     UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'surface_conc'}
     
     # Provided the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 17.0, data_316.concentrations[0]]
-    UserInput.model['InputParametersPriorValuesUncertainties'] = [-1, 1.0, data_316.errors[0]]
+    UserInput.model['InputParameterPriorValues'] = [np.log10(4.2E-19), 16.825, data_316.concentrations[0]]
+    UserInput.model['InputParametersPriorValuesUncertainties'] = [1, 1.0, data_316.errors[0]]
     
     
     # Optional bound setting lines for finding uninformed parameters.
-    UserInput.model['InputParameterPriorValues_upperBounds'] = [2.0E-18, 18.0, 18.0] 
-    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0.0, 0.0, 0.0]
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [np.log10(1.0E-17), 18.0, 18.0] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [np.log10(1.0E-19), 16.0, 0.0]
     
     # Guesses are provided, since the posteriors deviate significntly from literature values.
     # UserInput.model['InputParameterInitialGuess'] = [4.2E-19, 17.0, 5.0]
 
     # Provides simulation function for Cr concentration throughout a sample
-    UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper
+    UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_using_log_a_wrapper
     
     # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if neccesary
 
