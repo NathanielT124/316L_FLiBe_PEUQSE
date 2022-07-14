@@ -443,18 +443,24 @@ if __name__ == "__main__":
     print("data_316.py: Running independently.")
     import matplotlib.pyplot as plt
     import math
+    import numpy as np
+    import scipy
     
     calc_conc = []
 
     # Informed posteriors from PEUQSE simulation
-    DeffCr = 7.23158311e-19
-    C0Cr =  1.71877113e+01
-    horiz_offset =  -1.51819174e+00
-    # lin_comp = 6.46705364e-01
+    post = [ 1.08618444e-18,  1.62826164e+01, -2.66395346e+00,  3.22404782e-02]
+    eff_d_cr = post[0]
+    C0Cr =  post[1]
+    horiz_offset =  post[2]
+    vert_comp = post[3]
+    t = time
 
     for x in distances:
-        calc_conc.append(C0Cr*math.erf(((x-horiz_offset)*10**-6)/(2*math.sqrt(DeffCr)*time))) # + lin_comp*(x-horiz_offset))
-      
+        calc_conc.append( C0Cr*scipy.special.erf(
+            (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr ) * t ) ) ) + vert_comp * ( x - horiz_offset)
+        )
+        
     plt.figure(0)
     plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
     plt.title("3000 hr 316L FLiBe exposure chromium depletion")
@@ -468,6 +474,8 @@ if __name__ == "__main__":
     horiz_offset =  0
     calc_orig = []
     for x in distances:
-        calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr)*time)))
+        calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*time*3600))))
         
-    plt.plot(distances, calc_orig, color = 'b')
+    plt.plot(distances, calc_orig, color = 'g')
+    plt.legend(["Simulation Function", "Literature Function","Experimental"])
+    

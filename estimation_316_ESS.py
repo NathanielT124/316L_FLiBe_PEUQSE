@@ -28,36 +28,48 @@ if __name__ == "__main__":
     UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'horiz_offset','d':'lin_comp'}
     
     # Provided the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, 0.0, 0.0] # [4.2E-19, 16.825, -1.5, 0.0]
-    UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3.0, 1.0, -1]
+    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, 0.0, 0.0] # Literature values
+    UserInput.model['InputParametersPriorValuesUncertainties'] = [1.0E-18, 2.0, 3.0, -1]
+    
     
     # Optional bound setting lines for finding uninformed parameters.
-    UserInput.model['InputParameterPriorValues_upperBounds'] = [1.0E-16, 30.0, None, 3.0] 
-    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0.0, 0.0, None, -3.0]
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [2.0E-18, 30.0, 0, 0.50] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0.0, 0, -6, -0.5]
     
     # Guesses are provided, since the posteriors deviate significntly from literature values.
-    UserInput.model['InputParameterInitialGuess'] = [3.0E-19, 17.2125, 0.0, 0.0] 
+    UserInput.model['InputParameterInitialGuess'] = [ 1.42102601e-18,  1.62545737e+01, -2.82426438e+00,  3.28136270e-02]
 
     # Provides simulation function for Cr concentration throughout a sample
     UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper
+    
     # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if neccesary
 
+    # Enable checkpoints
+    UserInput.parameter_estimation_settings['multistart_checkPointFrequency'] = 1
+
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
-    UserInput.parameter_estimation_settings['mcmc_length'] = 100 # 10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 100000 # 10000 is the default.
     
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
-    #After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
+    # After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
     PE_object = PEUQSE.parameter_estimation(UserInput)
     
-    #Now we can do the mcmc!
-    PE_object.doEnsembleSliceSampling()
-    #Another option would be PE_object.doEnsembleSliceSampling(), one can also do grid search or an astroidal distribution search.
+    # Run the program with ESS
+    PE_object.doEnsembleJumpSampling()
+
+    # PE_object.doMetropolisHastings()    
+
+    # PE_object.doSinglePoint()
+    
+    # PE_object.doOptimizeLogP(method="BFGS", printOptimum=True, verbose=True)
+    
+    # Another option would be PE_object.doEnsembleSliceSampling(), one can also do grid search or an astroidal distribution search.
     
     # Create histograms and reponses only. PE_object.makeSamplingScatterMatrixPlot() does not seem to work
-    PE_object.createSimulatedResponsesPlots()
-    PE_object.makeHistogramsForEachParameter()
+    # PE_object.createSimulatedResponsesPlots()
+    # PE_object.makeHistogramsForEachParameter()
     
-    # PE_object.createAllPlots()
+    PE_object.createAllPlots()
 """ 
     #########Optional example of saving and loading PE_objects after running the mcmc.
     #########This feature requires having dill installed (pip install dill, https://pypi.org/project/dill/)

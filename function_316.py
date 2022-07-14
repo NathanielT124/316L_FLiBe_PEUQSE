@@ -27,11 +27,10 @@ def simulationFunction(x,a,b,c,d):
     if eff_d_cr < 0.0:
         return [float("nan")]
     y =  C0Cr*scipy.special.erf(
-        (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr ) * t ) ) + vert_comp * ( x - horiz_offset )
-        )
+        (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr * t * 3600)  ) ) ) + vert_comp * ( x - horiz_offset)
+        
     return y
 
-# PEUQSE required wrapper function which takes all parameters as a single nested array.
 x_values_for_data = []  # This is just initializing the global value to avoid confusion
 x_values_for_data = data_316.distances
 
@@ -40,7 +39,7 @@ def simulation_function_wrapper(parametersArray):
     a_given = parametersArray[0] # a "given" just means this wrapper will simulate using whatever a value it receives.
     b_given = parametersArray[1] # b "given" just means this wrapper will simulate using whatever b value it receives.
     c_given = parametersArray[2] # c "given" just means this wrapper will simulate using whatever c value it receives.
-    d_given = parametersArray[2] # d "given" just means this wrapper will simulate using whatever d value it receives.
+    d_given = parametersArray[3] # d "given" just means this wrapper will simulate using whatever d value it receives.
     
     # Call the simulation function with all the parameters passed in, y is returned as a numpy array
     y = simulationFunction(x_values_for_data, a_given, b_given, c_given, d_given) 
@@ -61,4 +60,4 @@ def simulation_function_wrapper(parametersArray):
 
 if __name__ == "__main__":
     print("function_316.py: Running independently.")
-    print(simulation_function_wrapper([3E-19, 17.2125, .5, 0]))
+    print(simulation_function_wrapper([ 4.2000e-19,  1.6825e+01, 1.0000e+00,  0.0000e+00]))
