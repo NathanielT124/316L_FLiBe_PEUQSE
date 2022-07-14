@@ -57,7 +57,7 @@ if __name__ == "__main__":
     PE_object.createSimulatedResponsesPlots()
     PE_object.makeHistogramsForEachParameter()
     
-    PE_object.createAllPlots()
+    # PE_object.createAllPlots()
 """ 
     #########Optional example of saving and loading PE_objects after running the mcmc.
     #########This feature requires having dill installed (pip install dill, https://pypi.org/project/dill/)
