@@ -10,26 +10,24 @@ a single nested array is also implemented, as PEUQSE requires to run properly
 """
 
 import numpy as np
-import scipy
+import scipy.special as sp
 import sys
 import data_316
 
 # This simulation function takes a single independant variable, depth (x) and returns the concentration predicted
 # at any particular depth given time. a, b, and c are the effective diffusion coefficient, initial chromium concentration,
 # and the horizontal offset for the function, respectively.
-def simulationFunction(x,a,b,c,d):
-    eff_d_cr = a
-    C0Cr = b # 16.825 is the literature value
-    horiz_offset = c # horizontal offset
-    vert_comp = d # vertical component to account for the slight upward trend in the experimental data
+def simulationFunction(x,a,b,c):
+    Dcr = a
+    C0 = b # 16.825 is the literature value
+    Cs = c # Surface concentraion
     t = data_316.time # 3000 hr for this dataset
     x = np.array(x) # distances must be a numpy array to run through PEUQSE properly
-    if eff_d_cr < 0.0:
+    if Dcr < 0.0:
         return [float("nan")]
-    y =  C0Cr*scipy.special.erf(
-        (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr * t * 3600)  ) ) ) + vert_comp * ( x - horiz_offset)
-        
-    return y
+    else:
+        y =  (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0
+        return y
 
 x_values_for_data = []  # This is just initializing the global value to avoid confusion
 x_values_for_data = data_316.distances
@@ -39,10 +37,9 @@ def simulation_function_wrapper(parametersArray):
     a_given = parametersArray[0] # a "given" just means this wrapper will simulate using whatever a value it receives.
     b_given = parametersArray[1] # b "given" just means this wrapper will simulate using whatever b value it receives.
     c_given = parametersArray[2] # c "given" just means this wrapper will simulate using whatever c value it receives.
-    d_given = parametersArray[3] # d "given" just means this wrapper will simulate using whatever d value it receives.
     
     # Call the simulation function with all the parameters passed in, y is returned as a numpy array
-    y = simulationFunction(x_values_for_data, a_given, b_given, c_given, d_given) 
+    y = simulationFunction(x_values_for_data, a_given, b_given, c_given) 
     # This is a check to determine if y contains any NaN values (NOTE: THIS CODE MAY SOON BE IMPLEMENTED IN PEUQSE AND BE REDUNDANT)
     y_array = np.array(y)
     nans_in_array = np.isnan(y_array)
@@ -60,4 +57,4 @@ def simulation_function_wrapper(parametersArray):
 
 if __name__ == "__main__":
     print("function_316.py: Running independently.")
-    print(simulation_function_wrapper([ 4.2000e-19,  1.6825e+01, 1.0000e+00,  0.0000e+00]))
+    print(simulation_function_wrapper([ 4.2000e-19,  1.6825e+01, 5]))

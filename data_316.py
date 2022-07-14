@@ -439,43 +439,80 @@ errors = [0.666174,
 # Time sample was exposed to FLiBe salt (hours)
 time = 3000
 
+
+
 if __name__ == "__main__":
+    
+    
+        
     print("data_316.py: Running independently.")
     import matplotlib.pyplot as plt
     import math
     import numpy as np
-    import scipy
+    import scipy.special as sp
     
-    calc_conc = []
-
-    # Informed posteriors from PEUQSE simulation
-    post = [ 1.08618444e-18,  1.62826164e+01, -2.66395346e+00,  3.22404782e-02]
-    eff_d_cr = post[0]
-    C0Cr =  post[1]
-    horiz_offset =  post[2]
-    vert_comp = post[3]
-    t = time
-
-    for x in distances:
-        calc_conc.append( C0Cr*scipy.special.erf(
-            (( x - horiz_offset ) * ( 10**( -6 ) ) ) / ( 2 * ( np.sqrt( eff_d_cr ) * t ) ) ) + vert_comp * ( x - horiz_offset)
-        )
+    
+    # For plotting with various times
+    def time_plot(post, t, fig):
+        Dcr = post[0]
+        C0 =  post[1]
+        Cs = post[2]
         
-    plt.figure(0)
-    plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
-    plt.title("3000 hr 316L FLiBe exposure chromium depletion")
-    plt.ylabel("Concentration (%)")
-    plt.xlabel("Distance (μm)")
-    plt.plot(distances, calc_conc, color = 'k')    
-    
-    
-    DeffCr = 4.2e-19
-    C0Cr =  1.6825e+01
-    horiz_offset =  0
-    calc_orig = []
-    for x in distances:
-        calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*time*3600))))
+        calc_conc = []
+        # Generate simulation data
+        for x in distances:
+            calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0)
+            
+        plt.figure(fig)
+        plt.xlim([-2, 55])
+        plt.ylim([-1, 20])
+        plt.title("316L FLiBe exposure chromium depletion")
+        plt.ylabel("Concentration (%)")
+        plt.xlabel("Distance (μm)")
+        plt.plot(distances, calc_conc)
         
-    plt.plot(distances, calc_orig, color = 'g')
-    plt.legend(["Simulation Function", "Literature Function","Experimental"])
+    # For plotting against experimental data and literature function
+    def plot_conc(post, t, fig):
+         calc_conc = []
     
+         # Informed posteriors from PEUQSE simulation
+         Dcr = post[0]
+         C0 =  post[1]
+         Cs = post[2]
+    
+         # Generate simulation data
+         for x in distances:
+             calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0)
+         
+         # Plot experimental vs simulated    
+         plt.figure(fig)
+         plt.xlim([-2, 55])
+         plt.ylim([-1, 20])
+         plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
+         plt.title("3000 hr 316L FLiBe exposure chromium depletion")
+         plt.ylabel("Concentration (%)")
+         plt.xlabel("Distance (μm)")
+         plt.plot(distances, calc_conc, color = 'k')    
+         
+         # Plot original literature function
+         DeffCr = 4.2e-19
+         C0Cr =  1.6825e+01
+
+         calc_orig = []
+         for x in distances:
+             calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*time*3600))))
+             
+         plt.plot(distances, calc_orig, color = 'g')
+         plt.legend(["Simulation Function", "Literature Function","Experimental"])
+        
+    # PEUQSE parameters for diffusion coefficient, initial chromium concentration, and surface concetrations
+    post = [1.10974752e-18, 1.74091586e+01, 7.18088047e+00]    
+    plot_conc(post, time, 0) 
+    time_plot(post, 1000, 1)
+    time_plot(post, 2000, 1)
+    time_plot(post, 3000, 1)
+    time_plot(post, 8760, 1)
+    
+    plt.figure(1)
+    plt.legend(["1000 hr","2000 hr","3000 hr", "1 year"])
+             
