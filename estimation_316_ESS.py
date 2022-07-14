@@ -28,22 +28,22 @@ if __name__ == "__main__":
     UserInput.model['parameterNamesAndMathTypeExpressionsDict'] = {'a':'d_eff_cr','b':'init_cr_conc','c':'horiz_offset','d':'lin_comp'}
     
     # Provided the prior distribution and uncertainties of the individual parameters.
-    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, -1.5, 0.0] # [4.2E-19, 16.825, -1.5, 0.0]
+    UserInput.model['InputParameterPriorValues'] = [4.2E-19, 16.825, 0.0, 0.0] # [4.2E-19, 16.825, -1.5, 0.0]
     UserInput.model['InputParametersPriorValuesUncertainties'] = [1E-19, 3.0, 1.0, -1]
     
     # Optional bound setting lines for finding uninformed parameters.
-    UserInput.model['InputParameterPriorValues_upperBounds'] = [1E-16, 30, None, 3] 
-    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0, 0, None, -3]
+    UserInput.model['InputParameterPriorValues_upperBounds'] = [1.0E-16, 30.0, None, 3.0] 
+    UserInput.model['InputParameterPriorValues_lowerBounds'] = [0.0, 0.0, None, -3.0]
     
     # Guesses are provided, since the posteriors deviate significntly from literature values.
-    UserInput.model['InputParameterInitialGuess'] = [3E-19, 17.2125, 0, 0] 
+    UserInput.model['InputParameterInitialGuess'] = [3.0E-19, 17.2125, 0.0, 0.0] 
 
     # Provides simulation function for Cr concentration throughout a sample
     UserInput.model['simulateByInputParametersOnlyFunction'] = function_316.simulation_function_wrapper
     # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if neccesary
 
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
-    UserInput.parameter_estimation_settings['mcmc_length'] = 1000 # 10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 100 # 10000 is the default.
     
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     #After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
