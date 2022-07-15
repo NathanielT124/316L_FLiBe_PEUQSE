@@ -30,7 +30,7 @@ if __name__ == "__main__":
     
     # Provided the prior distribution and uncertainties of the individual parameters.
     UserInput.model['InputParameterPriorValues'] = [np.log10(4.2E-19), 16.825, data_316.concentrations[0]]
-    UserInput.model['InputParametersPriorValuesUncertainties'] = [1, 1.0, data_316.errors[0]]
+    UserInput.model['InputParametersPriorValuesUncertainties'] = [10, 1.0, data_316.errors[0]]
     
     
     # Optional bound setting lines for finding uninformed parameters.
@@ -46,10 +46,10 @@ if __name__ == "__main__":
     # UserInput.model['walkerInitialDistributionSpread'] = 0.25 # [Optional] line to reduce initial distribution if neccesary
 
     # Enable checkpoints
-    UserInput.parameter_estimation_settings['multistart_checkPointFrequency'] = 1
+    # UserInput.parameter_estimation_settings['checkPointFrequency'] = 1
 
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
-    UserInput.parameter_estimation_settings['mcmc_length'] = 50000 # 10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 10000 # 10000 is the default.
     
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     # After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
@@ -58,9 +58,11 @@ if __name__ == "__main__":
     # Run the program with ESS
     PE_object.doEnsembleJumpSampling()
 
+    # PE_object.doMetropolisHastings()    
+
     # PE_object.doOptimizeSSR()
 
-    # PE_object.doMetropolisHastings()    
+    # PE_object.doEnsembleSliceSampling()    
 
     # PE_object.doSinglePoint()
     
