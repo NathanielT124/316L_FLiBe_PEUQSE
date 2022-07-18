@@ -51,13 +51,39 @@ if __name__ == "__main__":
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
     UserInput.parameter_estimation_settings['mcmc_length'] = 10000 # 10000 is the default.
     
+    UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 2.0 
+    
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     # After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
     PE_object = PEUQSE.parameter_estimation(UserInput)
     
-    # Run the program with ESS
+    # Run the program with EJS
     PE_object.doEnsembleJumpSampling()
-
+    
+    UserInput.parameter_estimation_settings['mcmc_continueSampling'] = True
+    UserInput.parameter_estimation_settings['mcmc_length'] = 100000 # 10000 is the default.
+    UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 0.5
+    
+    PE_object = PEUQSE.parameter_estimation(UserInput)
+    
+    PE_object.doEnsembleJumpSampling()
+    # UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 0.5 
+    
+    
+    '''
+    UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 0.10 
+    
+    UserInput.parameter_estimation_settings['mcmc_length'] = 1000000
+    UserInput.parameter_estimation_settings['mcmc_continueSampling']
+    PE_object.doEnsembleJumpSampling()
+    
+    '''
+    '''
+    #use 1,000,000 steps for this second step.
+    UserInput.parameter_estimation_settings['mcmc_length'] = 100000
+    UserInput.parameter_estimation_settings['mcmc_continueSampling']
+    PE_object.doEnsembleSliceSampling(movesType='global') #change sampling type.
+    '''
     # PE_object.doMetropolisHastings()    
 
     # PE_object.doOptimizeSSR()
