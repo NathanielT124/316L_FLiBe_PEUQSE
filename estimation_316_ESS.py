@@ -51,23 +51,14 @@ if __name__ == "__main__":
     # Reduced sample size needed for EnsembleSliceSampling() due to single-mode data
     UserInput.parameter_estimation_settings['mcmc_length'] = 1000000 # 10000 is the default.
     
-    UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 2.0 
-    
+    # UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 2.0 
+       
     # UserInput.parameter_estimation_settings['mcmc_walkerInitialDistribution'] = 'identical'
     # After filinlg the variables of the UserInput, now we make a 'parameter_estimation' object from it.
     PE_object = PEUQSE.parameter_estimation(UserInput)
     
     # Run the program with EJS
     PE_object.doEnsembleJumpSampling()
-    
-    UserInput.parameter_estimation_settings['mcmc_continueSampling'] = True
-    UserInput.parameter_estimation_settings['mcmc_length'] = 100000 # 10000 is the default.
-    UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 0.5
-    
-    PE_object = PEUQSE.parameter_estimation(UserInput)
-    
-    PE_object.doEnsembleJumpSampling()
-    # UserInput.parameter_estimation_settings['mcmc_threshold_filter_coefficient'] = 0.5 
     
     
     '''
