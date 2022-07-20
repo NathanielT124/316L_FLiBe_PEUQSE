@@ -27,15 +27,15 @@ plt.plot(uncertainties, map_values, 'ko-')
 plt.plot(uncertainties, literature_values, 'g--')
 # Axis labels
 plt.xlabel("Uncertainty")
-plt.ylabel("Diffusion coefficient")
+plt.ylabel("Diffusion coefficient ($m^2$/s)")
 # Axis log scale
 plt.xscale("log")
-plt.yscale("log")
 plt.legend(["Bayesian Estimate","Zheng 2016"])
-plt.title("MAP diffusion coefficient vs uncertainty")
+plt.title("Diffusion coefficient vs uncertainty")
 plt.grid(True, which="both")
 plt.show()
 
+'''
 # Create a graph of MU_AP values against uncertainty
 plt.figure(1)
 plt.plot(uncertainties, mu_ap_values, 'ko-')
@@ -61,3 +61,4 @@ plt.legend(["Bayesian Estimate","Zheng 2016"])
 plt.title("Standard deviation of Log base 10 of diffusion coefficient vs uncertainty")
 plt.grid(True, which="both")
 plt.show()
+'''
