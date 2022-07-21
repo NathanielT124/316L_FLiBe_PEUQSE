@@ -56,7 +56,6 @@ concentrations = [5.649085667,7.688482667,8.510341667,9.401538,10.57589767,
                   18.45511933,18.21138733,18.15116267,18.14145567,17.89169167,
                   17.98771533,17.98240833,18.16675533]
 
-
 # Error associated with Cr concentration measurements
 errors = [0.666174,0.895389667,0.827578333,0.803079333,0.806171333,0.824434,
           0.820237333,0.836283333,0.847239333,0.839054,0.855969,0.860858667,
@@ -83,9 +82,6 @@ errors = [0.666174,0.895389667,0.827578333,0.803079333,0.806171333,0.824434,
           0.930543667,0.924654667,0.922035,0.943556,0.944259,0.942084333,
           0.919133,]
 
-# Time sample was exposed to FLiBe salt (hours)
-time = 3000
-
 if __name__ == "__main__":
     
     print("data_316.py: Running independently.")
@@ -109,9 +105,10 @@ if __name__ == "__main__":
         plt.figure(fig)
         plt.xlim([-2, 55])
         plt.ylim([-1, 20])
-        plt.title("316L FLiBe exposure chromium depletion (uncertainty = {:})".format(unc))
+        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (uncertainty = {:})".format(unc))
         plt.ylabel("Concentration (wt%)")
         plt.xlabel("Distance (μm)")
+        plt.grid()
         plt.plot(distances, calc_conc)
         
     # For plotting against experimental data and literature function
@@ -132,9 +129,10 @@ if __name__ == "__main__":
          plt.xlim([-2, 55])
          plt.ylim([-1, 20])
          plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
-         plt.title("{:d} hr 316L FLiBe exposure chromium depletion (uncertainty = {:})".format(t, unc))
+         plt.title("{:d} hr, 700$^\circ$C 316L FLiBe exposure chromium depletion (d_eff_unc = {:})".format(t, unc))
          plt.ylabel("Concentration (wt%)")
          plt.xlabel("Distance (μm)")
+         plt.grid()
          plt.plot(distances, calc_conc, color = 'k')    
          
          # Plot original literature function
@@ -143,7 +141,7 @@ if __name__ == "__main__":
 
          calc_orig = []
          for x in distances:
-             calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*time*3600))))
+             calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*t*3600))))
              
          plt.plot(distances, calc_orig, color = 'g')
          plt.legend(["Bayesian Estimate", "Zheng 2016","Experimental Values"])
@@ -163,9 +161,10 @@ if __name__ == "__main__":
         plt.figure(fig)
         plt.xlim([-2, 55])
         plt.ylim([-1, 20])
-        plt.title("316L FLiBe exposure chromium depletion (time = {:d} year)".format(int(t/8760)))
-        plt.ylabel("Concentration (wt%)")
+        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (time = {:d} year)".format(int(t/8760)))
+        plt.ylabel("Concentration wt.%")
         plt.xlabel("Distance (μm)")
+        plt.grid()
         plt.plot(distances, calc_conc)
         
     # PEUQSE parameters for diffusion coefficient, initial chromium
@@ -183,7 +182,7 @@ if __name__ == "__main__":
     unc = [0.001, 0.01, 0.1, 1.0, 10.0]
     
     # Experimental timescales 1000, 2000, and 3000 hours
-    times = [1000, 2000, 3000, 8760]
+    times = [1000, 2000, 3000, 8760, 8760*40]
     
     # Convert from log scale to true value
     for i in range(len(post)):
@@ -192,17 +191,19 @@ if __name__ == "__main__":
     
     # Generate plots
     fig = 0
-    for i in range(0,5,2):
+    for i in range(0,5):
         plot_conc(post[i], times[2], fig, unc[i])
         fig += 1
         
         # Make plots for different timescales
-        for j in range(4):
+        for j in range(len(times)):
             time_plot(post[i], times[j], fig, unc[i])
         
         plt.figure(fig)
         plt.legend(["{:d} hours".format(times[0]),"{:d} hours".format(times[1]),
-                   "{:d} hours".format(times[2]),"{:d} hours".format(times[3])])
+                   "{:d} hours".format(times[2])
+                   ,"{:d} year".format(int(times[3]/8760))
+                   ,"{:d} years".format(int(times[4]/8760))])
         fig += 1
     
     
