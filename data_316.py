@@ -108,6 +108,7 @@ if __name__ == "__main__":
         plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (uncertainty = {:})".format(unc))
         plt.ylabel("Concentration (wt%)")
         plt.xlabel("Distance (μm)")
+        plt.grid()
         plt.plot(distances, calc_conc)
         
     # For plotting against experimental data and literature function
@@ -131,6 +132,7 @@ if __name__ == "__main__":
          plt.title("{:d} hr, 700$^\circ$C 316L FLiBe exposure chromium depletion (d_eff_unc = {:})".format(t, unc))
          plt.ylabel("Concentration (wt%)")
          plt.xlabel("Distance (μm)")
+         plt.grid()
          plt.plot(distances, calc_conc, color = 'k')    
          
          # Plot original literature function
@@ -162,6 +164,7 @@ if __name__ == "__main__":
         plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (time = {:d} year)".format(int(t/8760)))
         plt.ylabel("Concentration wt.%")
         plt.xlabel("Distance (μm)")
+        plt.grid()
         plt.plot(distances, calc_conc)
         
     # PEUQSE parameters for diffusion coefficient, initial chromium
@@ -179,7 +182,7 @@ if __name__ == "__main__":
     unc = [0.001, 0.01, 0.1, 1.0, 10.0]
     
     # Experimental timescales 1000, 2000, and 3000 hours
-    times = [1000, 2000, 3000, 8760]
+    times = [1000, 2000, 3000, 8760, 8760*40]
     
     # Convert from log scale to true value
     for i in range(len(post)):
@@ -193,12 +196,14 @@ if __name__ == "__main__":
         fig += 1
         
         # Make plots for different timescales
-        for j in range(4):
+        for j in range(len(times)):
             time_plot(post[i], times[j], fig, unc[i])
         
         plt.figure(fig)
         plt.legend(["{:d} hours".format(times[0]),"{:d} hours".format(times[1]),
-                   "{:d} hours".format(times[2]),"{:d} hours".format(times[3])])
+                   "{:d} hours".format(times[2])
+                   ,"{:d} year".format(int(times[3]/8760))
+                   ,"{:d} years".format(int(times[4]/8760))])
         fig += 1
     
     
