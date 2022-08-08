@@ -24,15 +24,15 @@ l = 13E-1 # cm
 w = 7E-1 # cm
 h = 1E-1 # cm
 So = 2*l*w + 2*w*h + 2*l*h # cm^2
+
 if si:
     So = So*10**-4 # m^2
+    unc_lwh = unc_lwh*10**-2 # m^2
 
 # Surface area uncertainty
 unc_So = math.sqrt(((2*l*w)*math.sqrt(((unc_lwh/l)**2 + (unc_lwh/w)**2)))**2
                  + ((2*w*h)*math.sqrt(((unc_lwh/w)**2 + (unc_lwh/h)**2)))**2
                  + ((2*l*h)*math.sqrt(((unc_lwh/l)**2 + (unc_lwh/h)**2)))**2)
-if si:
-    unc_So = unc_So # m^2
 
 if si:
     print("Surface area:\t\t{:f} ± {:f} m^2\n"
@@ -42,10 +42,10 @@ else:
       .format(So, unc_So), )
 
 # Starting concentration
-Co = 16.825 # wt%
+Co = 16.825 # wt.%
 
 # Guess for concentration uncertainty
-unc_Co = 1.0 # wt%
+unc_Co = 1.0 # wt.%
 
 # time
 t_3 = 3000 # hr
@@ -53,9 +53,9 @@ t_2 = 2000 # hr
 t_1 = 1000 # hr
 
 if si:
-    t_3 *= 3600
-    t_2 *= 3600
-    t_1 *= 3600
+    t_3 *= 3600 # s
+    t_2 *= 3600 # s
+    t_1 *= 3600 # s
     
 ####################################3000 Hours#################################
 # Weight loss (mg/cm^2) values estimated from graphs provided in Dr. Zheng's
@@ -65,16 +65,13 @@ weight_loss_3 = [0.456, 0.5499] # mg/cm^2
 
 # Standard error calculated
 unc_DW_3 = sem(weight_loss_3)*10**-2 # mg/cm^2
-if si:
-    unc_DW_3 = unc_DW_3 * 10 ** -2 # kg/m^2
 
 # Mean value of weight loss
 DW_3= sum(weight_loss_3)/len(weight_loss_3) # mg/cm^2
-if si:
-    DW_3 = DW_3 * 10 ** -2 # kg/m^2
 
 if si:
-    t_3 = t_3 * 3600 # s
+    unc_DW_3 = unc_DW_3 * 10 ** -2 # kg/m^2
+    DW_3 = DW_3 * 10 ** -2 # kg/m^2
 
 # Conversion to absolute weight
 DWa_3 = DW_3 * So # mg (kg if si = True)
@@ -192,12 +189,10 @@ else:
     
 ##########################Diffusion Coefficient Average########################
 
-Deff_arr = np.log10(Deff_1), np.log10(Deff_2), np.log10(Deff_3)
+Deff_arr = [Deff_1, Deff_2, Deff_3]
 
 Deff = sum(Deff_arr)/len(Deff_arr)
-print(10**Deff)
+print("Diffusion Coefficient:\t{:} m^2/s".format(Deff))
 
 # Standard error calculated
 std_err_Deff = sem(Deff_arr)
-
-print(std_err_Deff) 

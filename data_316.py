@@ -84,6 +84,13 @@ errors = [0.666174,0.895389667,0.827578333,0.803079333,0.806171333,0.824434,
 
 if __name__ == "__main__":
     
+    def cr_plot(C0, Dcr, t, Cs):
+        calc_conc = []
+        for x in distances:
+            calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/
+                                                (2*np.sqrt(Dcr*t*3600)))) + C0)
+        return calc_conc
+    
     print("data_316.py: Running independently.")
     import matplotlib.pyplot as plt
     import math
@@ -99,13 +106,15 @@ if __name__ == "__main__":
         calc_conc = []
         # Generate simulation data
         for x in distances:
-            calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0)
+            calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/
+                                                (2*np.sqrt(Dcr*t*3600)))) + C0)
             
         # Show plot
         plt.figure(fig)
         plt.xlim([-2, 55])
         plt.ylim([-1, 20])
-        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (uncertainty = {:})".format(unc))
+        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion"
+                  "(uncertainty = {:})".format(unc))
         plt.ylabel("Concentration (wt%)")
         plt.xlabel("Distance (μm)")
         plt.grid()
@@ -122,14 +131,17 @@ if __name__ == "__main__":
     
          # Generate simulation data
          for x in distances:
-             calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0)
+             calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/
+                                                 (2*np.sqrt(Dcr*t*3600)))) + C0)
          
          # Plot experimental vs simulated    
          plt.figure(fig)
          plt.xlim([-2, 55])
          plt.ylim([-1, 20])
-         plt.errorbar(distances, concentrations, errors, elinewidth=.5, capsize=5)
-         plt.title("{:d} hr, 700$^\circ$C 316L FLiBe exposure chromium depletion (d_eff_unc = {:})".format(t, unc))
+         plt.errorbar(distances, concentrations, errors, elinewidth=.5,
+                      capsize=5)
+         plt.title("{:d} hr, 700$^\circ$C 316L FLiBe exposure chromium"
+                   " depletion (d_eff_unc = {:})".format(t, unc))
          plt.ylabel("Concentration (wt%)")
          plt.xlabel("Distance (μm)")
          plt.grid()
@@ -139,9 +151,7 @@ if __name__ == "__main__":
          DeffCr = 4.2e-19
          C0Cr =  1.6825e+01
 
-         calc_orig = []
-         for x in distances:
-             calc_orig.append(C0Cr*math.erf(((x)*10**-6)/(2*math.sqrt(DeffCr*t*3600))))
+         calc_orig = cr_plot(C0Cr, DeffCr, t, 0)
              
          plt.plot(distances, calc_orig, color = 'g')
          plt.legend(["Bayesian Estimate", "Zheng 2016","Experimental Values"])
@@ -152,16 +162,14 @@ if __name__ == "__main__":
         C0 =  post[1]
         Cs = post[2]
         
-        calc_conc = []
-        # Generate simulation data
-        for x in distances:
-            calc_conc.append( (Cs-C0)*(1-sp.erf(((x*10**(-6)))/(2*np.sqrt(Dcr*t*3600)))) + C0)
+        calc_conc = cr_plot(C0, Dcr, t, Cs)
             
         # Show plot
         plt.figure(fig)
         plt.xlim([-2, 55])
         plt.ylim([-1, 20])
-        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion (time = {:d} year)".format(int(t/8760)))
+        plt.title("700$^\circ$C 316L FLiBe exposure chromium depletion"
+                  " (time = {:d} year)".format(int(t/8760)))
         plt.ylabel("Concentration wt.%")
         plt.xlabel("Distance (μm)")
         plt.grid()
@@ -200,8 +208,8 @@ if __name__ == "__main__":
             time_plot(post[i], times[j], fig, unc[i])
         
         plt.figure(fig)
-        plt.legend(["{:d} hours".format(times[0]),"{:d} hours".format(times[1]),
-                   "{:d} hours".format(times[2])
+        plt.legend(["{:d} hours".format(times[0]),"{:d} hours"
+                    .format(times[1]), "{:d} hours".format(times[2])
                    ,"{:d} year".format(int(times[3]/8760))
                    ,"{:d} years".format(int(times[4]/8760))])
         fig += 1
@@ -212,5 +220,5 @@ if __name__ == "__main__":
         unc_plot(post[i], times[3], fig, unc[i])
 
     plt.figure(fig)
-    plt.legend(["d_eff_unc = {:}".format(unc[0]),"d_eff_unc = {:}".format(unc[2]),
-               "d_eff_unc = {:}".format(unc[4])])
+    plt.legend(["d_eff_unc = {:}".format(unc[0]),"d_eff_unc = {:}"
+                .format(unc[2]), "d_eff_unc = {:}".format(unc[4])])
